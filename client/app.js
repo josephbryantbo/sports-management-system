@@ -1,6 +1,8 @@
 const role = localStorage.getItem("role") || "visitor";
 
-/* DASHBOARD */
+/* =========================
+   DASHBOARD
+========================= */
 if (document.getElementById("dashboard")) {
   fetch("http://localhost:3000/players")
     .then(res => res.json())
@@ -13,7 +15,10 @@ if (document.getElementById("dashboard")) {
       `;
     });
 }
-/* PLAYERS */
+
+/* =========================
+   PLAYERS
+========================= */
 if (document.getElementById("playersTable")) {
   fetch("http://localhost:3000/players")
     .then(res => res.json())
@@ -35,10 +40,41 @@ if (document.getElementById("playersTable")) {
 
   if (role === "admin") {
     document.getElementById("addPlayerBtn").style.display = "block";
+
+    document.getElementById("addPlayerBtn").onclick = () => {
+      document.getElementById("playerForm").style.display = "block";
+    };
   }
 }
 
-/* TEAMS */
+/* ADD PLAYER FUNCTION */
+function addPlayer() {
+  const player = {
+    player_name: document.getElementById("player_name").value,
+    position: document.getElementById("position").value,
+    jersey_number: document.getElementById("jersey_number").value,
+    roster_role: document.getElementById("roster_role").value,
+    team_id: document.getElementById("team_id").value,
+    sport_id: document.getElementById("sport_id").value
+  };
+
+  fetch("http://localhost:3000/players", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(player)
+  })
+    .then(res => res.json())
+    .then(() => {
+      alert("Player added!");
+      location.reload();
+    });
+}
+
+/* =========================
+   TEAMS
+========================= */
 if (document.getElementById("teamsTable")) {
   fetch("http://localhost:3000/teams")
     .then(res => res.json())
@@ -49,8 +85,8 @@ if (document.getElementById("teamsTable")) {
         table.innerHTML += `
         <tr>
           <td>${t.name}</td>
-          <td>${t.sport_name}</td>
-          <td>${t.coach_name}</td>
+          <td>-</td>
+          <td>-</td>
           <td>${t.city}</td>
           <td>${t.total_players}</td>
         </tr>`;
@@ -58,7 +94,9 @@ if (document.getElementById("teamsTable")) {
     });
 }
 
-/* LEAGUES */
+/* =========================
+   LEAGUES
+========================= */
 if (document.getElementById("leaguesTable")) {
   fetch("http://localhost:3000/leagues")
     .then(res => res.json())
@@ -77,25 +115,24 @@ if (document.getElementById("leaguesTable")) {
     });
 }
 
-/* SCHEDULE (STATIC FOR NOW) */
+/* =========================
+   SCHEDULE (NOW DYNAMIC)
+========================= */
 if (document.getElementById("scheduleTable")) {
-  const games = [
-    { date: "2024-11-01", sport: "Basketball", match: "Kean vs Rutgers", location: "Union, NJ" },
-    { date: "2024-11-05", sport: "Soccer", match: "Kean vs NJIT", location: "Newark, NJ" },
-    { date: "2024-11-10", sport: "Hockey", match: "Kean vs Princeton", location: "Princeton, NJ" },
-    { date: "2024-11-15", sport: "Football", match: "Kean vs Montclair", location: "Montclair, NJ" }
-  ];
+  fetch("http://localhost:3000/schedule")
+    .then(res => res.json())
+    .then(data => {
+      const table = document.getElementById("scheduleTable");
 
-  const table = document.getElementById("scheduleTable");
-
-  games.forEach(g => {
-    table.innerHTML += `
-      <tr>
-        <td>${g.date}</td>
-        <td>${g.sport}</td>
-        <td>${g.match}</td>
-        <td>${g.location}</td>
-      </tr>
-    `;
-  });
+      data.forEach(g => {
+        table.innerHTML += `
+          <tr>
+            <td>${g.date}</td>
+            <td>${g.sport}</td>
+            <td>${g.match}</td>
+            <td>${g.location}</td>
+          </tr>
+        `;
+      });
+    });
 }
