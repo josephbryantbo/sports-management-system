@@ -11,6 +11,15 @@
   <h1>Players</h1>
 
   <button id="addPlayerBtn" style="display:none;">Add Player</button>
+  <div id="playerForm" style="display:none; margin:20px 0;">
+  <input type="text" id="player_name" placeholder="Name">
+  <input type="text" id="position" placeholder="Position">
+  <input type="number" id="jersey_number" placeholder="Jersey #">
+  <input type="text" id="roster_role" placeholder="Role">
+  <input type="number" id="team_id" placeholder="Team ID">
+  <input type="number" id="sport_id" placeholder="Sport ID">
+  <button onclick="addPlayer()">Submit</button>
+</div>
 
   <table>
     <thead>
